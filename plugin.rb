@@ -18,7 +18,7 @@ after_initialize do
                           event_name: "notification_#{Notification.types[self.notification_type]}_created")
   end
 
-  add_model_callback(:page_visits, :after_commit, on: :create) do
+  add_model_callback(DiscoursePageVisits::PageVisit, :after_commit, on: :create) do
     # you can enqueue web hooks anywhere outside the AR transaction
     # provided that web hook event type exists
     WebHook.enqueue_hooks(:page_visit, # event type name
@@ -45,7 +45,7 @@ after_initialize do
     end
 
     def setup_page_visit(args)
-      page_visit = PageVisit.find_by(id: args[:page_visit_id])
+      page_visit = DiscoursePageVisits::PageVisit.find_by(id: args[:page_visit_id])
       return if page_visit.blank?
       args[:payload] = PageVisitSerializer.new(page_visit, scope: guardian, root: false).as_json
     end
