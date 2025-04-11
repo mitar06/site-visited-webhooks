@@ -21,6 +21,7 @@ after_initialize do
   add_model_callback(DiscoursePageVisits::PageVisit, :after_commit, on: :create) do
     # you can enqueue web hooks anywhere outside the AR transaction
     # provided that web hook event type exists
+    Rails.logger.warn "FromSetup: #{self}"
     WebHook.enqueue_hooks(:page_visit, # event type name
                           page_visit_id: self.id, # pass the relevant record id
                           # event name appears in the header of webhook payload
@@ -45,6 +46,7 @@ after_initialize do
     end
 
     def setup_page_visit(args)
+      Rails.logger.warn "FromSetup: #{args}"
       page_visit = DiscoursePageVisits::PageVisit.find_by(id: args[:page_visit_id])
       return if page_visit.blank?
       args[:payload] = PageVisitSerializer.new(page_visit, scope: guardian, root: false).as_json
