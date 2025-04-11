@@ -49,7 +49,7 @@ after_initialize do
       Rails.logger.warn "FromSetup: args: #{args}"
       page_visit = DiscoursePageVisits::PageVisit.find_by(id: args[:page_visit_id])
       return if page_visit.blank?
-      args[:payload] = PageVisitSerializer.new(page_visit, scope: guardian, root: false).as_json
+      args[:payload] = DiscoursePageVisits::PageVisitSerializer.new(page_visit, scope: guardian, root: false).as_json
     end
 
     def setup_session(args)
@@ -63,11 +63,9 @@ after_initialize do
   # `body` is the object about to be sent (JSON serialized).
   # In this filter, you have the power to modify it as your wish
   Plugin::Filter.register(:after_build_web_hook_body) do |instance, body|
-    Rails.logger.warn "Instance: #{instance}"
-    Rails.logger.warn "Body: #{body}"
-    #if body[:session]
-     # body[:user_session] = body.delete :session
-   # end
+    if body[:session]
+      body[:user_session] = body.delete :session
+    end
 
     body # remember to return the object, otherwise the payload would be empty
   end
