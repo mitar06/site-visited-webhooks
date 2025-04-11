@@ -35,6 +35,7 @@ after_initialize do
   end
 
   Jobs::EmitWebHookEvent.class_eval do
+    Rails.logger.warn "From EmitWebhookEvent.class_eval"
     # the method name should always be setup_<event type name>(args)
     def setup_notification(args)
       notification = Notification.find_by(id: args[:notification_id])
