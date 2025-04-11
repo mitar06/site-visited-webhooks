@@ -44,7 +44,7 @@ after_initialize do
       args[:payload] = NotificationSerializer.new(notification, scope: guardian, root: false).as_json
     end
 
-    def setup_page_visits(args)
+    def setup_page_visit(args)
       page_visit = PageVisit.find_by(id: args[:page_visit_id])
       return if page_visit.blank?
       args[:payload] = PageVisitSerializer.new(page_visit, scope: guardian, root: false).as_json
