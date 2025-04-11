@@ -24,7 +24,7 @@ after_initialize do
     Rails.logger.warn "FromAddModelCallback: #{self}"
     Rails.logger.warn " :page_visit contatnt value: #{:page_visit}"
 
-    WebHook.enqueue_hooks(:page_visit, # event type name
+    WebHook.enqueue_hooks(DiscoursePageVisits::PageVisit, # event type name
                           page_visit_id: self.id, # pass the relevant record id
                           # event name appears in the header of webhook payload
                           event_name: "page_visit_#{self.id}_created")
