@@ -11,5 +11,5 @@ end
 
 WebHookEventType.seed do |b|
   b.id = 110
-  b.name = "page_visits"
+  b.name = "page_visit"
 end
