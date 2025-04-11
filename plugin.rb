@@ -38,6 +38,7 @@ after_initialize do
     Rails.logger.warn "From EmitWebhookEvent.class_eval"
     # the method name should always be setup_<event type name>(args)
     def setup_notification(args)
+      Rails.logger.warn "From setup_notification"
       notification = Notification.find_by(id: args[:notification_id])
       return if notification.blank? # or raise an exception if you like
 
