@@ -8,3 +8,6 @@ en:
         session_event:
           name: "Session Event"
           details: "When there is a login or logout."
+        page_visit_event:
+          name: "Page Visit Event"
+          details: "When a user visits a individual page"
