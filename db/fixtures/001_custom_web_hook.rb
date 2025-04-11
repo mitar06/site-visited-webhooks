@@ -7,3 +7,9 @@ WebHookEventType.seed do |b|
   b.id = 101
   b.name = "session"
 end
+
+
+WebHookEventType.seed do |b|
+  b.id = 110
+  b.name = "visited_page"
+end

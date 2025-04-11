@@ -1,6 +1,6 @@
-# name: discourse-webhooks-example
+# name: hive-community-webhooks
 # version: 1.0
-# authors: Erick Guan (fantasticfears@gmail.com)
+# authors: Hiveologie (nikola@hiveologie.com)
 
 PLUGIN_NAME = 'discourse_webhooks_example'.freeze
 
@@ -16,6 +16,15 @@ after_initialize do
                           notification_id: self.id, # pass the relevant record id
                           # event name appears in the header of webhook payload
                           event_name: "notification_#{Notification.types[self.notification_type]}_created")
+  end
+
+  add_model_callback(:page_visit, :after_commit, on: :create) do
+    # you can enqueue web hooks anywhere outside the AR transaction
+    # provided that web hook event type exists
+    WebHook.enqueue_hooks(:page_visit, # event type name
+                          page_visit_id: self.id, # pass the relevant record id
+                          # event name appears in the header of webhook payload
+                          event_name: "page_visit_#{self.id}_created")
   end
 
   %i(user_logged_in user_logged_out).each do |event|
@@ -35,6 +44,12 @@ after_initialize do
       args[:payload] = NotificationSerializer.new(notification, scope: guardian, root: false).as_json
     end
 
+    def setup_page_visits(args)
+      page_visit = PageVisit.find_by(id: args[:page_visit_id])
+      return if page_visit.blank?
+      args[:payload] = PageVisitSerializer.new(page_visit, scope: guardian, root: false).as_json
+    end
+
     def setup_session(args)
       user = User.find_by(id: args[:user_id])
       return if user.blank?
@@ -46,9 +61,11 @@ after_initialize do
   # `body` is the object about to be sent (JSON serialized).
   # In this filter, you have the power to modify it as your wish
   Plugin::Filter.register(:after_build_web_hook_body) do |instance, body|
-    if body[:session]
-      body[:user_session] = body.delete :session
-    end
+    Rails.logger.warn "Instance: #{instance}"
+    Rails.logger.warn "Body: #{body}"
+    #if body[:session]
+     # body[:user_session] = body.delete :session
+   # end
 
     body # remember to return the object, otherwise the payload would be empty
   end
