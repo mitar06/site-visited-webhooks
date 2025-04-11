@@ -2,12 +2,12 @@
 # version: 1.0
 # authors: Hiveologie (nikola@hiveologie.com)
 
-PLUGIN_NAME = 'discourse_webhooks_example'.freeze
+PLUGIN_NAME = 'site_visited_webhooks'.freeze
 
-enabled_site_setting :discourse_webhooks_example_enabled
+enabled_site_setting :site_visited_webhooks
 
 after_initialize do
-  register_seedfu_fixtures(Rails.root.join("plugins", "discourse-webhooks-example", "db", "fixtures").to_s)
+  register_seedfu_fixtures(Rails.root.join("plugins", "site-visited-webhooks", "db", "fixtures").to_s)
 
   add_model_callback(:notification, :after_commit, on: :create) do
     # you can enqueue web hooks anywhere outside the AR transaction
