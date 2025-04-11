@@ -4,7 +4,7 @@
 
 PLUGIN_NAME = 'site_visited_webhooks'.freeze
 
-enabled_site_setting :site_visited_webhooks
+enabled_site_setting :site_visited_webhooks_enabled
 
 after_initialize do
   register_seedfu_fixtures(Rails.root.join("plugins", "site-visited-webhooks", "db", "fixtures").to_s)
